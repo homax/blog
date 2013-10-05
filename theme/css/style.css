@@ -1,0 +1,36 @@
+body 
+{
+	font-family: Georgia;
+	font-size: 14px;
+	color: #000;
+}
+
+a 
+{
+	color: #00f;
+	text-decoration: none;
+}
+
+a:hover 
+{
+	text-decoration: underline;
+}
+
+input[type="text"]
+{
+	width: 500px;
+}
+
+textarea
+{
+	width: 500px;
+	height: 300px;
+}
+header nav li {
+	display: inline-block;
+	border-left: 1px solid #777;
+	padding: 0px 5px;
+}
+header nav li:first-child {
+	border-left: 0;
+}
