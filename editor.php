@@ -1,1 +1,1 @@
-<?php	require_once "config.php";	require_once MODEL_PATH."startup.php";	require_once MODEL_PATH."model.php";	startup();// Извлечение статей.$articles = articles_all();// Вывод в шаблон.include THEME_PATH."editor.php";
+<?php	require_once "config.php";	require_once MODEL_PATH."startup.php";	require_once MODEL_PATH."model.php";	startup();// Извлечение статей.$articles = articles_all();echo template(THEME_PATH."editor.html.php", array('articles' => $articles));

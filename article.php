@@ -11,4 +11,5 @@ if($id)
 else
 	die("Не указано какую статью выводить");
 
-include THEME_PATH."article.php";
+
+echo template(THEME_PATH."article.html.php", array('article' => $article));
