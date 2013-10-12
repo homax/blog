@@ -1,7 +1,4 @@
-<? 
-	$page_title = 'Редактирование статьи';
-	include "header.php";
-?>
+
 	<h1>Редактирование статьи</h1>
 	<? if($error) :?>
 		<b style="color: red;">Заполните все поля!</b>
@@ -21,5 +18,3 @@
 
 
 	</form>
-
-<? include "footer.php"; ?>
