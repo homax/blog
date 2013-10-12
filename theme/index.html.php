@@ -1,7 +1,4 @@
-	<? 
-		$page_title = 'Вывод всех статей';
-		include "header.php";
-	 ?>
+
 	<section>
 	<?php
 		foreach ($articles as $key => $value) {
@@ -9,4 +6,4 @@
 		}
 	?>
 	</section>
-	<? include "footer.php"; ?>
+
