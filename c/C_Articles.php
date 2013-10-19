@@ -1,6 +1,6 @@
 <?php
 //
-// Конттроллер статей.
+// Контроллер статей.
 //
 
 class C_Articles extends C_Base
@@ -9,23 +9,25 @@ class C_Articles extends C_Base
 	// Конструктор.
 	//
 	private $mArticles;
+	private $mProtect;
 
 	function __construct() {
 		parent::__construct();
 		$this->mArticles = M_Articles::Instance();
+		$this->mProtect = M_Protect::Instance();
 	}
 	
 	public function action_index(){
 		$this->title .= '::Блог';
 		$articles = $this->mArticles->All();
-		/*for($i=0, $c = count($articles); $i < $c; $i++) {
-			$articles[$i]['content'] = articles_intro($articles[$i], 20);
-		}*/
+		for($i=0, $c = count($articles); $i < $c; $i++) {
+			$articles[$i]['content'] = $this->mArticles->intro($articles[$i], 20);
+		}
 		$this->content = $this->Template('v/articles/v_index.php', array('articles' => $articles));	
 	}
 
 	public function action_article(){
-		if(isset($_GET['id'])) $id = clrInt($_GET['id']);
+		if(isset($_GET['id'])) $id = $this->mProtect->clrInt($_GET['id']);
 
 		if($id) {
 			$article = $this->mArticles->Get($id);
@@ -81,7 +83,7 @@ class C_Articles extends C_Base
 		$href = "index.php?c=article&act=edit";
 		$this->left = $this->Template('v/v_left.php', array('articles' => $articles, 'href' => $href));
 		
-		if(isset($_GET['id'])) $id = clrInt($_GET['id']);
+		if(isset($_GET['id'])) $id = $this->mProtect->clrInt($_GET['id']);
 
 		if(!$id) {
 			die("Не указано какую статью выводить");

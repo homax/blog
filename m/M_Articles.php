@@ -111,4 +111,22 @@ class M_Articles
 		$this->msql->Delete('articles', $where);
 		return true;
 	}
+
+	//
+	// Превью статьи
+	//
+	public function intro($article, $count = 150)
+	{
+		$text = $article['content'];
+		$text = mb_substr($text, 0, $count);
+
+		if(mb_strlen($text) < $count) {
+			return $text;
+		}
+		$text = mb_substr($text, 0, $count-4);
+		$arr = explode(" ", $text);
+		array_pop($arr);
+		$text = implode(" ", $arr);
+		return $text .= " ...";
+	}
 }
