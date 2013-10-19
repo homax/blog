@@ -42,7 +42,7 @@ class M_MSQL
 		$result = mysqli_query($link, $query);
 		
 		if (!$result)
-			die(mysqli_error());
+			die(mysqli_error($link));
 		
 		$n = mysqli_num_rows($result);
 		$arr = array();

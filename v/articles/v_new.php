@@ -17,7 +17,7 @@ $content - содержание
 		<br/>
 		Содержание:
 		<br/>
-		<textarea name="content"><?=$content?></textarea>
+		<textarea name="content" rows="5" cols="50"><?=$content?></textarea>
 		<br/>
 		<input type="submit" value="Добавить" />
 	</form>

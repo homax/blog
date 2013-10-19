@@ -10,11 +10,13 @@ class C_Articles extends C_Base
 	//
 	private $mArticles;
 	private $mProtect;
+	private $mComments;
 
 	function __construct() {
 		parent::__construct();
 		$this->mArticles = M_Articles::Instance();
 		$this->mProtect = M_Protect::Instance();
+		$this->mComments = M_Comments::Instance();
 	}
 	
 	public function action_index(){
@@ -30,18 +32,24 @@ class C_Articles extends C_Base
 		if(isset($_GET['id'])) $id = $this->mProtect->clrInt($_GET['id']);
 
 		if($id) {
+			if($this->IsPost() and isset($_POST['add_comment'])) {
+				$this->mComments->add($id, $_POST['name'], $_POST['comment']);
+				header("location: index.php?c=articles&act=article&id=" . $id);
+				exit();
+			}
 			$article = $this->mArticles->Get($id);
 			$this->title .= '::Статья::'.$article['title'];
 			//Для сайдбара
 			
 			$articles = $this->mArticles->All();
+			$comments = $this->mComments->all($id);
 			$href = "index.php?c=articles&act=article";
 			$this->left = $this->Template('v/v_left.php', array('articles' => $articles, 'href' => $href));
 		}
 		else
 			die("Не указано какую статью выводить");
 
-		$this->content = $this->Template("v/articles/v_article.php", array('article' => $article));
+		$this->content = $this->Template("v/articles/v_article.php", array('article' => $article, 'comments' => $comments));
 	}
 
 	public function action_editor(){
