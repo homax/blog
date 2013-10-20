@@ -11,12 +11,21 @@ class C_Articles extends C_Base
 	private $mArticles;
 	private $mProtect;
 	private $mComments;
+	private $mUsers;
 
 	function __construct() {
 		parent::__construct();
 		$this->mArticles = M_Articles::Instance();
 		$this->mProtect = M_Protect::Instance();
 		$this->mComments = M_Comments::Instance();
+		$this->mUsers = M_Users::Instance();
+	}
+
+	protected function before()
+	{
+		parent::before();
+		$this->user = $this->mUsers->Get();
+
 	}
 	
 	public function action_index(){
@@ -54,9 +63,17 @@ class C_Articles extends C_Base
 
 	public function action_editor(){
 		$this->title .= '::Панель администратора';
+
+		//Проверка прав доступа
+		if(!$this->mUsers->Can("VIEW_ADMINKA")) {
+			//header("Location: index.php?c=pages&act=login");
+			$this->content = "<font color='red'>Отказано в доступе</font>";
+			//die("Отказано в доступе");
+		} else {
 		$articles = $this->mArticles->All();
 
 		$this->content = $this->Template("v/articles/v_editor.php", array('articles' => $articles));
+		}
 	}
 
 	public function action_new(){
@@ -66,7 +83,7 @@ class C_Articles extends C_Base
 		{
 			if ($this->mArticles->Add($_POST['title'], $_POST['content']))
 			{
-				header('Location: index.php?c=article&act=editor');
+				header('Location: index.php?c=articles&act=editor');
 				die();
 			}
 			

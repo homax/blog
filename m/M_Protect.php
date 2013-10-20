@@ -29,7 +29,8 @@ class M_Protect
 	/*
 	*Обработка строк
 	*/
-	public function clrStr($link, $str) {
+	public function clrStr($str) {
+		global $link;
 		return mysqli_real_escape_string($link, $str);
 	}
 	
