@@ -25,8 +25,7 @@ class C_Pages extends C_Base
 		{
 			if ($this->mUsers->Login($_POST['login'], $_POST['password'], isset($_POST['remember'])))
 			{
-				header('Location: index.php');
-				die();
+				$this->redirect("/");
 			}
 			
 			$login = $_POST['login'];
@@ -41,6 +40,12 @@ class C_Pages extends C_Base
 		}
 
 		$this->content = $this->Template("v/pages/v_login.php", array('login' => $login, 'password' => $password, 'error' => $error));	
+	}
+
+	public function action_404() {
+		$this->title .= "::404";
+		//header(404)
+		$this->content = $this->Template("v/pages/v_404.php");
 	}
 
 	

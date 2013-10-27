@@ -22,8 +22,7 @@ class C_Users extends C_Base
 		{
 			if ($this->mUsers->register($_POST['login'], $_POST['password'], $_POST['role']))
 			{
-				header('Location: index.php');
-				die();
+				$this->redirect("/");
 			}
 			
 			$login = $_POST['login'];

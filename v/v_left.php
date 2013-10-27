@@ -2,7 +2,7 @@
 	<ul>
 		<?
 			foreach ($articles as $key => $value) {
-				echo "<li><a href='".$href."&id=".$value['id_article']."'>{$value['title']}</a></li>";
+				echo "<li><a href='".$href.$value['id_article']."'>{$value['title']}</a></li>";
 			}
 		?>
 	</ul>
