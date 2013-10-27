@@ -16,18 +16,14 @@ class M_MSQL
 	
 	private function __construct()
 	{
-		// Настройки подключения к БД.
-		$hostname = 'localhost'; 
-		$username = 'root'; 
-		$password = '';
-		$dbName = 'progschool';
+		
 		
 		// Языковая настройка.
 		setlocale(LC_ALL, 'ru_RU.utf8');	
 		
 		// Подключение к БД.
 		global $link;
-		@ $link = mysqli_connect($hostname, $username, $password, $dbName) or die('No connect with data base'); 
+		@ $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('No connect with data base'); 
 		mysqli_query($link, 'SET NAMES utf8');
 	}
 	

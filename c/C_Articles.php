@@ -34,17 +34,17 @@ class C_Articles extends C_Base
 		for($i=0, $c = count($articles); $i < $c; $i++) {
 			$articles[$i]['content'] = $this->mArticles->intro($articles[$i], 20);
 		}
-		$this->content = $this->Template('v/articles/v_index.php', array('articles' => $articles));	
+		$this->content = $this->Template('v/articles/v_index.php', array('articles' => $articles,
+																		 "can_edit" => $this->mUsers->Can("VIEW_ADMINKA")));	
 	}
 
 	public function action_article(){
-		if(isset($_GET['id'])) $id = $this->mProtect->clrInt($_GET['id']);
+		if(isset($this->params[2])) $id = $this->mProtect->clrInt($this->params[2]);
 
 		if($id) {
 			if($this->IsPost() and isset($_POST['add_comment'])) {
 				$this->mComments->add($id, $_POST['name'], $_POST['comment']);
-				header("location: index.php?c=articles&act=article&id=" . $id);
-				exit();
+				$this->redirect("/articles/article/".$id);
 			}
 			$article = $this->mArticles->Get($id);
 			$this->title .= '::Статья::'.$article['title'];
@@ -52,13 +52,13 @@ class C_Articles extends C_Base
 			
 			$articles = $this->mArticles->All();
 			$comments = $this->mComments->all($id);
-			$href = "index.php?c=articles&act=article";
+			$href = "/articles/article/";
 			$this->left = $this->Template('v/v_left.php', array('articles' => $articles, 'href' => $href));
 		}
 		else
 			die("Не указано какую статью выводить");
 
-		$this->content = $this->Template("v/articles/v_article.php", array('article' => $article, 'comments' => $comments));
+		$this->content = $this->Template("v/articles/v_article.php", array('article' => $article, 'comments' => $comments, "can_edit" => $this->mUsers->Can("VIEW_ADMINKA")));
 	}
 
 	public function action_editor(){
@@ -83,8 +83,7 @@ class C_Articles extends C_Base
 		{
 			if ($this->mArticles->Add($_POST['title'], $_POST['content']))
 			{
-				header('Location: index.php?c=articles&act=editor');
-				die();
+				$this->redirect("/articles/editor/");
 			}
 			
 			$title = $_POST['title'];
@@ -102,13 +101,18 @@ class C_Articles extends C_Base
 	}
 
 	public function action_edit(){
+
+		if(!$this->mUsers->Can("VIEW_ADMINKA"))
+			$this->redirect("/login/");
+
+
 		$this->title .= '::Редактирование';
 
 		$articles = $this->mArticles->All();
-		$href = "index.php?c=article&act=edit";
+		$href = "/articles/edit/";
 		$this->left = $this->Template('v/v_left.php', array('articles' => $articles, 'href' => $href));
 		
-		if(isset($_GET['id'])) $id = $this->mProtect->clrInt($_GET['id']);
+		if(isset($this->params[2])) $id = $this->mProtect->clrInt($this->params[2]);
 
 		if(!$id) {
 			die("Не указано какую статью выводить");
@@ -120,8 +124,7 @@ class C_Articles extends C_Base
 
 				if ($this->mArticles->Edit($id, $_POST['title'], $_POST['content']))
 				{
-					header('Location: index.php?c=article&act=editor');
-					die();
+					$this->redirect("/articles/editor/");
 				}
 				
 				$title = $_POST['title'];
@@ -131,8 +134,7 @@ class C_Articles extends C_Base
 			}elseif(isset($_POST['delete'])) {
 
 				if($this->mArticles->Delete($id)) {
-					header('Location: index.php?c=article&act=editor');
-					die();
+					$this->redirect("/articles/editor/");
 				}
 
 			}

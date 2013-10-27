@@ -139,12 +139,10 @@ class M_Users
 		if ($id_user == null)
 			return false;
 
+		//$query = "Select ... from users join priv2roles using(id_role) join privs using (id_priv) where id_user = id and privs.name = 'privName'";
 		$query = "SELECT count(*) as cnt FROM privs2roles p2r JOIN users u on p2r.id_role = (Select id_role from users where id_user='$id_user') JOIN privs pr on p2r.id_priv = (Select id_priv from privs where name='$priv')";
 		$result = $this->msql->Select($query);
-		if($result[0]['cnt'] > 0)
-			return true;
-		else
-			return false;
+		return ($result[0]['cnt'] > 0);
 	}
 
 	//
