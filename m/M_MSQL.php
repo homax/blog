@@ -5,6 +5,8 @@
 class M_MSQL
 {
 	private static $instance;
+	public $db;
+
 	
 	public static function Instance()
 	{
@@ -22,9 +24,8 @@ class M_MSQL
 		setlocale(LC_ALL, 'ru_RU.utf8');	
 		
 		// Подключение к БД.
-		global $link;
-		@ $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('No connect with data base'); 
-		mysqli_query($link, 'SET NAMES utf8');
+		$this->db = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS) or die('No connect with data base'); 
+		$this->db->query('SET NAMES utf8');
 	}
 	
 	//
@@ -34,18 +35,17 @@ class M_MSQL
 	//
 	public function Select($query)
 	{
-		global $link;
-		$result = mysqli_query($link, $query);
-		
+		$result = $this->db->query($query);
+
 		if (!$result)
-			die(mysqli_error($link));
+			die($result->errorInfo());
 		
-		$n = mysqli_num_rows($result);
+		$n = $result->rowCount();
 		$arr = array();
 	
 		for($i = 0; $i < $n; $i++)
 		{
-			$row = mysqli_fetch_assoc($result);		
+			$row = $result->fetch(PDO::FETCH_ASSOC);		
 			$arr[] = $row;
 		}
 
@@ -59,14 +59,13 @@ class M_MSQL
 	// результат	- идентификатор новой строки
 	//
 	public function Insert($table, $object)
-	{
-		global $link;			
+	{			
 		$columns = array(); 
 		$values = array(); 
 	
 		foreach ($object as $key => $value)
 		{
-			$key = mysqli_real_escape_string($link, $key . '');
+			//$key = $this->db->quote($key . '');
 			$columns[] = $key;
 			
 			if ($value === null)
@@ -74,7 +73,7 @@ class M_MSQL
 				$values[] = 'NULL';
 			}
 			else {	
-				$value = mysqli_real_escape_string($link, $value . '');							
+				//$value = $this->db->quote($value . '');							
 				$values[] = "'$value'";
 			}
 		}
@@ -83,12 +82,11 @@ class M_MSQL
 		$values_s = implode(',', $values);  
 			
 		$query = "INSERT INTO $table ($columns_s) VALUES ($values_s)";
-		$result = mysqli_query($link, $query);
-								
+		$result = $this->db->query($query);					
 		if (!$result)
-			die(mysqli_error());
+			die($result->errorInfo());
 			
-		return mysqli_insert_id($link);
+		return $this->db->lastInsertId();
 	}
 	
 	//
@@ -100,12 +98,11 @@ class M_MSQL
 	//	
 	public function Update($table, $object, $where)
 	{
-		global $link;
 		$sets = array();
 	
 		foreach ($object as $key => $value)
 		{
-			$key = mysqli_real_escape_string($link, $key . '');
+			//$key = $this->db->quote($key . '');
 			
 			if ($value === null)
 			{
@@ -113,19 +110,19 @@ class M_MSQL
 			}
 			else
 			{
-				$value = mysqli_real_escape_string($link, $value . '');					
+				//$value = $this->db->quote($value . '');					
 				$sets[] = "$key='$value'";			
 			}			
 		}
 
 		$sets_s = implode(',', $sets);			
 		$query = "UPDATE $table SET $sets_s WHERE $where";
-		$result = mysqli_query($link, $query);
+		$result = $this->db->query($query);
 		
 		if (!$result)
-			die(mysqli_error());
+			die($result->errorInfo());
 
-		return mysqli_affected_rows($link);	
+		return $result->rowCount();	
 	}
 	
 	//
@@ -138,11 +135,11 @@ class M_MSQL
 	{
 		global $link;
 		$query = "DELETE FROM $table WHERE $where";		
-		$result = mysqli_query($link, $query);
+		$result = $this->db->query($query);
 						
 		if (!$result)
-			die(mysqli_error());
+			die($result->errorInfo());
 
-		return mysqli_affected_rows($link);	
+		return $result->rowCount();	
 	}
 }

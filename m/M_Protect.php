@@ -16,7 +16,7 @@ class M_Protect
 	
 	private function __construct()
 	{
-		
+
 	}
 
 	/*
@@ -30,8 +30,7 @@ class M_Protect
 	*Обработка строк
 	*/
 	public function clrStr($str) {
-		global $link;
-		return mysqli_real_escape_string($link, $str);
+		return $str;
 	}
 	
 }
