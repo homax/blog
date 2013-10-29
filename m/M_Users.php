@@ -120,7 +120,7 @@ class M_Users
 	//
 	public function GetByLogin($login)
 	{	
-		$t = "SELECT * FROM users WHERE login = '%s'";
+		$t = "SELECT * FROM users WHERE login = %s";
 		$query = sprintf($t, $this->pr->clrStr($login));
 		$result = $this->msql->Select($query);
 		return $result[0];
@@ -172,7 +172,7 @@ class M_Users
 		if ($sid == null)
 			return null;
 			
-		$t = "SELECT id_user FROM sessions WHERE sid = '%s'";
+		$t = "SELECT id_user FROM sessions WHERE sid = %s";
 		$query = sprintf($t, $this->pr->clrStr($sid));
 		$result = $this->msql->Select($query);
 				
@@ -204,16 +204,15 @@ class M_Users
 		{
 			$session = array();
 			$session['time_last'] = date('Y-m-d H:i:s'); 			
-			$t = "sid = '%s'";
+			$t = "sid = %s";
 			$where = sprintf($t, $this->pr->clrStr($sid));
 			$affected_rows = $this->msql->Update('sessions', $session, $where);
 
 			if ($affected_rows == 0)
 			{
-				$t = "SELECT count(*) FROM sessions WHERE sid = '%s' ";		
+				$t = "SELECT count(*) FROM sessions WHERE sid = %s ";		
 				$query = sprintf($t, $this->pr->clrStr($sid));
 				$result = $this->msql->Select($query);
-				
 				if ($result[0]['count(*)'] == 0)
 					$sid = null;			
 			}			

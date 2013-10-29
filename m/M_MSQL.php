@@ -25,7 +25,7 @@ class M_MSQL
 		
 		// Подключение к БД.
 		$this->db = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS) or die('No connect with data base'); 
-		$this->db->query('SET NAMES utf8');
+		$this->db->exec('SET NAMES utf8');
 	}
 	
 	//
@@ -37,7 +37,7 @@ class M_MSQL
 	{
 		$result = $this->db->query($query);
 
-		if (!$result)
+		if ($result === false)
 			die($result->errorInfo());
 		
 		$n = $result->rowCount();
@@ -73,8 +73,8 @@ class M_MSQL
 				$values[] = 'NULL';
 			}
 			else {	
-				//$value = $this->db->quote($value . '');							
-				$values[] = "'$value'";
+				$value = $this->db->quote($value . '');							
+				$values[] = "$value";
 			}
 		}
 
@@ -82,8 +82,8 @@ class M_MSQL
 		$values_s = implode(',', $values);  
 			
 		$query = "INSERT INTO $table ($columns_s) VALUES ($values_s)";
-		$result = $this->db->query($query);					
-		if (!$result)
+		$result = $this->db->exec($query);					
+		if ($result === false)
 			die($result->errorInfo());
 			
 		return $this->db->lastInsertId();
@@ -110,17 +110,17 @@ class M_MSQL
 			}
 			else
 			{
-				//$value = $this->db->quote($value . '');					
-				$sets[] = "$key='$value'";			
+				$value = $this->db->quote($value . '');					
+				$sets[] = "$key=$value";			
 			}			
 		}
 
 		$sets_s = implode(',', $sets);			
 		$query = "UPDATE $table SET $sets_s WHERE $where";
 		$result = $this->db->query($query);
-		
-		if (!$result)
-			die($result->errorInfo());
+
+		if ($result === false)
+			die("Не выполнен запрос ".$query.print_r($this->db->errorInfo(), true));
 
 		return $result->rowCount();	
 	}

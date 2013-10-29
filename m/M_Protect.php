@@ -30,7 +30,7 @@ class M_Protect
 	*Обработка строк
 	*/
 	public function clrStr($str) {
-		return $str;
+		return M_MSQL::Instance()->db->quote($str);
 	}
 	
 }
