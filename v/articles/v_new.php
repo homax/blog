@@ -4,7 +4,7 @@
 $title - заголовок
 $content - содержание
 */?>
-
+<? if($can_edit):?>
 	<h1>Новая статья</h1>
 	<? if($error) :?>
 		<b style="color: red;">Заполните все поля!</b>
@@ -21,3 +21,6 @@ $content - содержание
 		<br/>
 		<input type="submit" value="Добавить" />
 	</form>
+<?else:?>
+<p class="error" style="color: red;">Отказано в доступе</p>
+<?endif;?>

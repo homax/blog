@@ -36,7 +36,7 @@ class C_Users extends C_Base
 			$error = false;
 		}
 
-		$this->content = $this->Template("v/users/v_new.php", array('login' => $login, 'password' => $password, 'error' => $error));	
+		$this->content = $this->Template("v/users/v_new.php", array('login' => $login, 'password' => $password, 'error' => $error, "can_edit" => $this->mUsers->Can("VIEW_ADMINKA")));	
 	}
 
 	

@@ -4,7 +4,7 @@
 $login - заголовок
 $password - содержание
 */?>
-
+<? if($can_edit) : ?>
 	<h1>Новый пользователь</h1>
 	<? if($error) :?>
 		<b style="color: red;">Скорее всего пользователь с таким именем уже существует</b>
@@ -28,3 +28,6 @@ $password - содержание
 		<br>
 		<input type="submit" name="addU" value="Добавить" />
 	</form>
+<?else:?>
+<p class="error" style="color: red;">Отказано в доступе</p>
+<?endif;?>

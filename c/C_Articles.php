@@ -97,7 +97,7 @@ class C_Articles extends C_Base
 			$error = false;
 		}
 
-		$this->content = $this->Template("v/articles/v_new.php", array('title' => $title, 'content' => $content, 'error' => $error));
+		$this->content = $this->Template("v/articles/v_new.php", array('title' => $title, 'content' => $content, 'error' => $error, "can_edit" => $this->mUsers->Can("VIEW_ADMINKA")));
 	}
 
 	public function action_edit(){
