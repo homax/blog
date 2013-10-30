@@ -37,8 +37,10 @@ class M_MSQL
 	{
 		$result = $this->db->query($query);
 
-		if ($result === false)
-			die($result->errorInfo());
+		if ($result === false) {
+			$error = $this->db->errorInfo();
+			die("Не выполнен запрос: ".$query."<br>Error: ".$error[2]);
+		}
 		
 		$n = $result->rowCount();
 		$arr = array();
@@ -83,8 +85,10 @@ class M_MSQL
 			
 		$query = "INSERT INTO $table ($columns_s) VALUES ($values_s)";
 		$result = $this->db->exec($query);					
-		if ($result === false)
-			die($result->errorInfo());
+		if ($result === false) {
+			$error = $this->db->errorInfo();
+			die("Не выполнен запрос: ".$query."<br>Error: ".$error[2]);
+		}
 			
 		return $this->db->lastInsertId();
 	}
@@ -119,8 +123,10 @@ class M_MSQL
 		$query = "UPDATE $table SET $sets_s WHERE $where";
 		$result = $this->db->query($query);
 
-		if ($result === false)
-			die("Не выполнен запрос ".$query.print_r($this->db->errorInfo(), true));
+		if ($result === false) {
+			$error = $this->db->errorInfo();
+			die("Не выполнен запрос: ".$query."<br>Error: ".$error[2]);
+		}
 
 		return $result->rowCount();	
 	}
@@ -135,10 +141,12 @@ class M_MSQL
 	{
 		global $link;
 		$query = "DELETE FROM $table WHERE $where";		
-		$result = $this->db->query($query);
+		$result = $this->db->exec($query);
 						
-		if (!$result)
-			die($result->errorInfo());
+		if ($result === false) {
+			$error = $this->db->errorInfo();
+			die("Не выполнен запрос: ".$query."<br>Error: ".$error[2]);
+		}
 
 		return $result->rowCount();	
 	}
